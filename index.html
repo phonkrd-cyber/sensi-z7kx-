@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<title>SENSI Z7KX BR</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: app mobile com cabeçalho fixo, páginas em coluna única e navegação inferior; tema escuro com acento trocável */
+:root{
+  --bg:#07080d; --bg2:#0d0f18; --card:#12151f; --card2:#171b28; --line:#232840;
+  --fg:#e8ebf5; --mut:#8c93ad; --ok:#38d996; --warn:#f5b84a; --bad:#ff5468;
+  --a1:#2f7bff; --a2:#8a4dff; --a3:#ff3b5c; --a4:#19d3f0; --acc:var(--a4);
+  --grad:linear-gradient(90deg,#2f7bff,#8a4dff,#ff3b5c,#19d3f0,#2f7bff);
+  --f-d:'Chakra Petch','Segoe UI',system-ui,sans-serif;
+  --f-b:'Barlow','Segoe UI',system-ui,sans-serif;
+  --f-m:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html[data-th="azul"]{--acc:#2f7bff;--grad:linear-gradient(90deg,#2f7bff,#19d3f0,#2f7bff)}
+html[data-th="vermelho"]{--acc:#ff3b5c;--grad:linear-gradient(90deg,#ff3b5c,#ff8a3d,#ff3b5c)}
+html[data-th="roxo"]{--acc:#8a4dff;--grad:linear-gradient(90deg,#8a4dff,#d24dff,#8a4dff)}
+html[data-th="ciano"]{--acc:#19d3f0;--grad:linear-gradient(90deg,#19d3f0,#38d996,#19d3f0)}
+html[data-th="preto"]{--bg:#000;--bg2:#050505;--card:#0b0b0d;--card2:#111114;--line:#1d1d22;--acc:#d9dbe6;--grad:linear-gradient(90deg,#8c93ad,#e8ebf5,#8c93ad)}
+html[data-th="rgb"]{--acc:var(--a4)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:15px/1.45 var(--f-b);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
+h1,h2,h3{font-family:var(--f-d);margin:0;text-wrap:balance;letter-spacing:.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+.sig{font-family:var(--f-d);font-weight:700;letter-spacing:.14em;background:var(--grad);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:flow 6s linear infinite}
+@keyframes flow{to{background-position:300% 0}}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--grad);background-size:300% 100%;animation:flow 6s linear infinite}
+.brand{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.brand b{font:700 17px var(--f-d);letter-spacing:.08em}
+.brand small{font-size:10px}
+.chip{font:600 11px var(--f-d);letter-spacing:.06em;padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--mut);white-space:nowrap}
+main{padding-block:16px 96px;min-width:0}
+.page{display:none;animation:in .28s ease}
+.page.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin-bottom:4px}
+.sub{color:var(--mut);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;min-width:0}
+.card h3{font-size:15px;margin-bottom:6px;color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:left;cursor:pointer;min-width:0;display:flex;flex-direction:column;gap:4px}
+.tile:active,.btn:active{transform:scale(.97)}
+.tile b{font:600 14px var(--f-d)}
+.tile span{font-size:12px;color:var(--mut)}
+.tile svg{width:22px;height:22px;stroke:var(--acc);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.btn{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font:600 13px var(--f-d);letter-spacing:.05em;cursor:pointer;transition:.15s}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#05060a}
+.btn.bad{border-color:var(--bad);color:var(--bad)}
+.btn:focus-visible,.tile:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,nav button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>*{min-width:0}
+.sl{display:grid;grid-template-columns:1fr 78px;gap:6px 12px;align-items:center;margin-bottom:14px}
+.sl label{font:600 13px var(--f-d);letter-spacing:.04em}
+.sl input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--acc);height:28px;margin:0}
+.sl input[type=number],input.txt,select,textarea{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%}
+.sl input[type=number]{text-align:center;font-family:var(--f-m);grid-row:1;grid-column:2}
+textarea{font:12px/1.4 var(--f-m);min-height:120px;resize:vertical}
+.kv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border:0}
+.kv span:first-child{color:var(--mut)}
+.kv span:last-child{overflow-wrap:anywhere}
+.na{color:var(--warn)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.pill{display:inline-block;font:600 11px var(--f-d);padding:3px 8px;border-radius:999px;border:1px solid var(--line);margin-right:4px}
+.code{font:12px/1.5 var(--f-m);background:#05060a;border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;white-space:pre;margin:6px 0;color:#bfe9ff}
+.cmd .meta{font-size:13px;color:var(--mut);margin:4px 0}
+.cmd h4{margin:0;font:600 15px var(--f-d)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px}
+.tabs button{flex:none;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:600 12px var(--f-d);cursor:pointer;color:var(--mut)}
+.tabs button.on{color:#05060a;background:var(--acc);border-color:var(--acc)}
+.prof{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:var(--card2)}
+.prof.sel{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+.prof b{font:600 14px var(--f-d)}
+.prof small{color:var(--mut);display:block;font-size:12px}
+.big{font:700 34px var(--f-d);color:var(--acc)}
+.bars{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:84px 1fr 34px;gap:8px;align-items:center;font-size:12px}
+.bar i{display:block;height:8px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
+.bar i u{position:absolute;inset:0 auto 0 0;background:var(--grad);background-size:300% 100%;border-radius:4px;transition:width .3s}
+.note{font-size:12px;color:var(--mut);border-left:2px solid var(--warn);padding-left:10px;margin:8px 0}
+nav.bot{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);background:var(--bg2);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+nav.bot button{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;font:600 10px var(--f-d);letter-spacing:.05em;color:var(--mut);padding:6px 0;cursor:pointer;border-radius:8px}
+nav.bot button.on{color:var(--acc)}
+nav.bot svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--card2);border:1px solid var(--acc);border-radius:10px;padding:10px 14px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:40;max-width:calc(100% - 32px)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.sw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sw button{height:64px;border-radius:12px;border:2px solid var(--line);cursor:pointer;font:700 13px var(--f-d);color:#fff;text-shadow:0 1px 3px #000}
+.sw button.on{border-color:#fff}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(min-width:700px){body{max-width:720px;margin:0 auto}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><b>SENSI Z7KX BR</b><small class="sig">BY: MACIELZ7KX</small></div>
+  <span class="chip" id="verchip">V2.0</span>
+</header>
+<main>
+  <section class="page" id="p-inicio"></section>
+  <section class="page" id="p-sens"></section>
+  <section class="page" id="p-ia"></section>
+  <section class="page" id="p-scanner"></section>
+  <section class="page" id="p-perfis"></section>
+  <section class="page" id="p-brevent"></section>
+  <section class="page" id="p-fps"></section>
+  <section class="page" id="p-diag"></section>
+  <section class="page" id="p-aparelhos"></section>
+  <section class="page" id="p-backup"></section>
+  <section class="page" id="p-temas"></section>
+  <section class="page" id="p-mais"></section>
+</main>
+<nav class="bot" id="nav" aria-label="Navegação principal"></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const KEYS=[['geral','Geral'],['red','Ponto vermelho'],['x2','Mira 2x'],['x4','Mira 4x'],['awm','Mira AWM'],['olh','Olhadinha']];
+const DEF={geral:100,red:100,x2:100,x4:100,awm:100,olh:100};
+const PRESETS={
+ CAPA:{geral:150,red:140,x2:120,x4:95,awm:60,olh:130},
+ PUXADA:{geral:130,red:120,x2:105,x4:90,awm:70,olh:110},
+ PRECISÃO:{geral:90,red:80,x2:70,x4:60,awm:40,olh:80},
+ EQUILIBRADO:{geral:110,red:100,x2:90,x4:75,awm:55,olh:100},
+ PERSONALIZADO:{...DEF}
+};
+const ICON={
+ home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ sens:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+ prof:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+ term:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 10l3 2-3 2M13 15h4"/>',
+ more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
+ ia:'<path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>',
+ fps:'<path d="M3 17l5-6 4 4 4-8 5 6"/>',
+ diag:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+ dev:'<path d="M4 7h16v10H4zM8 21h8M12 17v4"/>',
+ bak:'<path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/>',
+ tema:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h9"/>'
+};
+const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+
+const THEMES=[['rgb','RGB','linear-gradient(90deg,#2f7bff,#8a4dff,#ff3b5c,#19d3f0)'],['azul','Azul','#1f5fd6'],['vermelho','Vermelho','#c42a45'],['roxo','Roxo','#6a35c9'],['ciano','Ciano','#0d9db5'],['preto','Preto premium','#000']];
+
+const PK='com.dts.freefiremax';
+const BREV=[
+{cat:'Otimização de desempenho',items:[
+ {n:'Compilar o jogo (speed-profile)',d:'Recompila o código do Free Fire MAX com o perfil de execução do Android.',c:`cmd package compile -m speed-profile -f ${PK}`,e:'Usa o compilador do ART para gerar código otimizado a partir do perfil de uso. Pode melhorar o tempo de carregamento; o ganho varia de aparelho para aparelho.',k:'Android 7+ (testado em lógica para Android 15). Exige que o jogo esteja instalado.',a:'Abra o Brevent, entre na aba de comandos/shell, cole o código e execute. Pode levar alguns minutos.',r:`cmd package compile --reset ${PK}`},
+ {n:'Reduzir animações do sistema',d:'Diminui a duração das animações de janela e transição.',c:'settings put global window_animation_scale 0.5\nsettings put global transition_animation_scale 0.5\nsettings put global animator_duration_scale 0.5',e:'Altera três ajustes globais de animação do Android. Deixa a interface do sistema mais ágil; não altera o FPS dentro do jogo.',k:'Android 4.2+.',a:'Cole as três linhas no shell do Brevent e execute.',r:'settings put global window_animation_scale 1.0\nsettings put global transition_animation_scale 1.0\nsettings put global animator_duration_scale 1.0'}]},
+{cat:'Estabilidade de FPS',items:[
+ {n:'Fixar taxa de atualização alta',d:'Pede à tela o modo de taxa de atualização mais alta (ex.: 120 Hz).',c:'settings put system peak_refresh_rate 120\nsettings put system min_refresh_rate 60',e:'Define os limites de taxa de atualização que o sistema usa. A chave é do Android AOSP; alguns fabricantes ignoram ou usam outra chave, então pode não ter efeito. A taxa de FPS do jogo continua limitada pelo próprio jogo.',k:'Depende do fabricante. Verifique o resultado em Diagnóstico.',a:'Execute no shell do Brevent e confira a taxa em Diagnóstico.',r:'settings delete system peak_refresh_rate\nsettings delete system min_refresh_rate'},
+ {n:'Ver estatísticas de quadros do jogo',d:'Somente leitura: mostra dados de renderização do jogo aberto.',c:`dumpsys gfxinfo ${PK}`,e:'Lista contagem de quadros e quadros lentos. Não altera nada no aparelho.',k:'Android 5+. O jogo precisa estar em execução.',a:'Abra o jogo, volte ao Brevent e execute.',r:null}]},
+{cat:'Memória',items:[
+ {n:'Ver uso de memória do jogo',d:'Somente leitura: mostra quanta RAM o Free Fire MAX está usando.',c:`dumpsys meminfo ${PK}`,e:'Relatório de memória do processo. Útil para comparar antes e depois de fechar outros apps.',k:'Android 5+.',a:'Execute com o jogo aberto.',r:null},
+ {n:'Liberar cache de apps',d:'Pede ao sistema para liberar espaço de cache até um limite.',c:'pm trim-caches 1G',e:'O Android apaga caches de apps até haver 1 GB livre. Caches são recriados quando necessário; dados pessoais não são apagados. Em alguns aparelhos o comando exige permissões que o Brevent pode não ter.',k:'Android 6+. Pode retornar erro de permissão.',a:'Execute no shell do Brevent.',r:null}]},
+{cat:'Resolução',items:[
+ {n:'Resolução 80% (Moto G54 5G)',d:'864x1920, mantém a proporção da tela 1080x2400.',c:'wm size 864x1920',e:'Reduz a resolução de renderização do sistema, o que alivia a GPU. Texto e imagens ficam menos nítidos. Use junto com a densidade de 320 para manter o tamanho dos elementos.',k:'Valores calculados para tela 1080x2400. Em outros aparelhos use a proporção da sua tela (veja o Diagnóstico).',a:'Execute no shell do Brevent. A tela pode piscar.',r:'wm size reset'},
+ {n:'Resolução 75% (Moto G54 5G)',d:'810x1800, redução mais forte.',c:'wm size 810x1800',e:'Mesma lógica da opção de 80%, com menos pixels. Menor nitidez; indicado se ainda houver quedas de FPS.',k:'Tela 1080x2400.',a:'Execute no shell do Brevent.',r:'wm size reset'},
+ {n:'Ver resolução atual',d:'Somente leitura.',c:'wm size',e:'Mostra a resolução física e a de override, se houver.',k:'Android 4.3+.',a:'Execute e leia o resultado.',r:null}]},
+{cat:'Densidade DPI',items:[
+ {n:'Densidade 320 dpi',d:'Compensa a resolução de 80% mantendo o tamanho dos elementos.',c:'wm density 320',e:'Define a densidade lógica da tela. Valores muito baixos deixam a interface pequena demais; não use abaixo de 280.',k:'Android 4.3+.',a:'Execute após aplicar a resolução 80%.',r:'wm density reset'},
+ {n:'Ver densidade atual',d:'Somente leitura.',c:'wm density',e:'Mostra a densidade física e a de override.',k:'Android 4.3+.',a:'Execute e leia o resultado.',r:null}]},
+{cat:'Processos em segundo plano',items:[
+ {n:'Encerrar o processo do jogo',d:'Finaliza o processo em segundo plano do Free Fire MAX.',c:`am force-stop ${PK}`,e:'Encerra o jogo por completo e libera a memória dele. Você sai da partida se estiver jogando.',k:'Android 2.0+.',a:'Execute apenas com o jogo fechado ou fora de partida.',r:null},
+ {n:'Encerrar processos em segundo plano',d:'Mata processos de apps que não estão em uso.',c:'am kill-all',e:'Finaliza processos em cache de apps que não estão visíveis. O Android reinicia o que for necessário; apps podem demorar mais para abrir depois.',k:'Android 5+.',a:'Execute antes de abrir o jogo.',r:null},
+ {n:'Restringir app em segundo plano',d:'Impede um app específico de rodar em segundo plano.',c:'cmd appops set NOME.DO.PACOTE RUN_IN_BACKGROUND ignore',e:'Troque NOME.DO.PACOTE pelo pacote do app. Use apenas em apps que você não precisa que recebam notificações em segundo plano.',k:'Android 9+.',a:'Substitua o pacote e execute.',r:'cmd appops set NOME.DO.PACOTE RUN_IN_BACKGROUND default'}]},
+{cat:'Manutenção de desempenho',items:[
+ {n:'Otimização geral do sistema',d:'Executa a rotina de otimização de apps do Android.',c:'cmd package bg-dexopt-job',e:'Roda agora a tarefa que o sistema faz normalmente com o aparelho parado e carregando. Pode deixar o aparelho lento durante alguns minutos.',k:'Android 7+.',a:'Execute com o aparelho carregando.',r:null},
+ {n:'Confirmar pacote do jogo',d:'Somente leitura: verifica se o Free Fire MAX está instalado.',c:'pm list packages | grep freefire',e:`Deve listar package:${PK}. Se aparecer outro nome, use o nome listado nos demais comandos.`,k:'Android 4+.',a:'Execute e leia o resultado.',r:null}]},
+{cat:'Restauração de configurações',items:[
+ {n:'Restaurar resolução e densidade',d:'Volta ao padrão de fábrica.',c:'wm size reset\nwm density reset',e:'Remove as alterações feitas pelos comandos de resolução e densidade.',k:'Android 4.3+.',a:'Execute se a tela ficar estranha.',r:null},
+ {n:'Restaurar animações',d:'Volta as animações ao normal.',c:'settings put global window_animation_scale 1.0\nsettings put global transition_animation_scale 1.0\nsettings put global animator_duration_scale 1.0',e:'Restaura o valor padrão (1.0).',k:'Android 4.2+.',a:'Execute no shell do Brevent.',r:null},
+ {n:'Restaurar compilação do jogo',d:'Remove a compilação feita pelo comando speed-profile.',c:`cmd package compile --reset ${PK}`,e:'Devolve o jogo ao estado de compilação padrão do sistema.',k:'Android 7+.',a:'Execute no shell do Brevent.',r:null}]}
+];
+
+const DEVICES=[
+ {id:'moto-g54',brand:'Motorola',name:'Moto G54 5G',match:(m,b)=>/g54/i.test(m||'')||/moto.*g54/i.test(m||''),full:true,
+  spec:{tela:'6,5" IPS, 1080x2400, até 120 Hz',chip:'MediaTek Dimensity 7020 (referência do fabricante)',ram:'6 a 12 GB conforme versão'},
+  bias:{geral:6,red:2,x2:0,x4:-4,awm:-6,olh:4},hz:120,
+  tips:['A tela suporta 120 Hz; confirme em Diagnóstico se o navegador reporta a taxa.','No jogo, use gráficos Suave ou Padrão se notar quedas; Ultra pesa mais no chip.','Resolução 80% com densidade 320 reduz carga da GPU (veja Brevent).','Evite jogar carregando em carregador rápido por muito tempo: o aparelho esquenta e reduz o desempenho.','Feche apps recentes antes de abrir o jogo.']},
+ {id:'samsung',brand:'Samsung',name:'Samsung Galaxy (perfil genérico)',match:(m,b)=>/samsung/i.test(b||'')||/^SM-/i.test(m||''),full:false,spec:{},bias:{geral:0,red:0,x2:0,x4:0,awm:0,olh:0},hz:null,
+  tips:['Aparelhos Samsung têm o Game Booster/Game Launcher nas configurações, que gerencia modo de desempenho.','Ainda sem perfil específico do seu modelo.']},
+ {id:'xiaomi',brand:'Xiaomi',name:'Xiaomi / Redmi / POCO (perfil genérico)',match:(m,b)=>/xiaomi|redmi|poco/i.test((b||'')+(m||'')),full:false,spec:{},bias:{geral:0,red:0,x2:0,x4:0,awm:0,olh:0},hz:null,
+  tips:['Aparelhos Xiaomi têm o Game Turbo nas configurações, que gerencia modo de desempenho.','Ainda sem perfil específico do seu modelo.']}
+];
+const GENERIC={id:'generic',brand:'',name:'Perfil genérico',match:()=>true,full:false,spec:{},bias:{geral:0,red:0,x2:0,x4:0,awm:0,olh:0},hz:null,tips:['Sem perfil específico para este aparelho. As sugestões usam apenas os dados do Diagnóstico.']};
+/* ===== Estado e armazenamento ===== */
+const SK='sensi-z7kx-br-v2';
+let memOnly=false;
+const clamp=(n,a=0,b=200)=>Math.min(b,Math.max(a,Math.round(Number(n)||0)));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function freshState(){
+  const profiles={},order=[];
+  for(const n of Object.keys(PRESETS)){const id='b-'+n;profiles[id]={name:n,vals:{...PRESETS[n]},builtin:true};order.push(id)}
+  return {v:2,active:'b-EQUILIBRADO',profiles,order,theme:'rgb',pref:'equilibrado',devOverride:'',backups:[],lastAI:null};
+}
+let S=freshState();
+function load(){
+  try{
+    const raw=localStorage.getItem(SK);
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(d&&d.v===2&&d.profiles&&Array.isArray(d.order)){
+      const base=freshState();
+      S={...base,...d};
+      for(const id of S.order){const p=S.profiles[id];if(!p){S.order=S.order.filter(x=>x!==id);continue}
+        for(const [k] of KEYS)p.vals[k]=clamp(p.vals[k])}
+      if(!S.profiles[S.active])S.active=S.order[0];
+    }
+  }catch(e){memOnly=true}
+}
+function save(){
+  try{localStorage.setItem(SK,JSON.stringify(S))}catch(e){memOnly=true}
+}
+const cur=()=>S.profiles[S.active];
+
+/* ===== Utilidades de interface ===== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+let tt;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+async function copy(text,okMsg){
+  try{await navigator.clipboard.writeText(text);toast(okMsg||'Copiado.');return}catch(e){}
+  try{
+    const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0;top:0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    const ok=document.execCommand('copy');ta.remove();
+    toast(ok?(okMsg||'Copiado.'):'Não foi possível copiar. Selecione o texto e copie manualmente.');
+  }catch(e){toast('Não foi possível copiar. Selecione o texto e copie manualmente.')}
+}
+window.addEventListener('error',e=>toast('Erro tratado: '+(e.message||'falha inesperada')));
+window.addEventListener('unhandledrejection',()=>toast('Uma operação falhou. Tente novamente.'));
+
+/* ===== Aparelho ===== */
+const DEV={ready:false,manufacturer:null,model:null,android:null,androidNote:'',w:null,h:null,dpr:null,dpi:null,hz:null,mem:null,cores:null,touch:null};
+async function detectDevice(){
+  try{
+    const ua=navigator.userAgent||'';
+    const uad=navigator.userAgentData;
+    let model=null,pv=null;
+    if(uad&&uad.getHighEntropyValues){
+      try{const hv=await uad.getHighEntropyValues(['model','platformVersion','platform']);
+        if(hv.model&&hv.model.length>1)model=hv.model;
+        if(hv.platformVersion)pv=hv.platformVersion;
+        if(hv.platform)DEV.platform=hv.platform;
+      }catch(e){}
+    }
+    if(!model){const m=ua.match(/Android[^;]*;\s*([^;)]+?)(?:\sBuild|\)|;)/);if(m&&m[1].trim().length>1&&!/^K$/.test(m[1].trim()))model=m[1].trim()}
+    DEV.model=model;
+    if(model){
+      if(/^moto|^XT\d/i.test(model))DEV.manufacturer='Motorola';
+      else if(/^SM-/i.test(model))DEV.manufacturer='Samsung';
+      else if(/^(M\d{4}|2\d{6,}|Redmi|POCO|Mi\s)/i.test(model))DEV.manufacturer='Xiaomi (provável)';
+    }
+    if(pv){DEV.android=String(pv).split('.')[0]}
+    else{const m=ua.match(/Android\s([\d.]+)/);if(m){DEV.android=m[1].split('.')[0];DEV.androidNote='O navegador pode reportar uma versão reduzida. Confirme em Configurações > Sobre o telefone.'}}
+    DEV.isAndroid=/Android/i.test(ua);
+    const dpr=window.devicePixelRatio||1;
+    DEV.dpr=dpr;DEV.w=Math.round(screen.width*dpr);DEV.h=Math.round(screen.height*dpr);
+    DEV.dpi=Math.round(dpr*160);
+    DEV.mem=navigator.deviceMemory||null;
+    DEV.cores=navigator.hardwareConcurrency||null;
+    DEV.touch=navigator.maxTouchPoints||0;
+  }catch(e){}
+  DEV.ready=true;
+  measureHz();
+}
+function measureHz(){
+  return new Promise(res=>{
+    try{
+      const ts=[];let n=0;
+      const step=t=>{ts.push(t);if(++n<70)requestAnimationFrame(step);else{
+        const d=[];for(let i=1;i<ts.length;i++)d.push(ts[i]-ts[i-1]);
+        d.sort((a,b)=>a-b);const med=d[Math.floor(d.length/2)];
+        const raw=1000/med;const std=[30,48,60,90,120,144];
+        DEV.hz=std.reduce((p,c)=>Math.abs(c-raw)<Math.abs(p-raw)?c:p);
+        DEV.hzRaw=Math.round(raw);res();if(typeof renderCurrent==='function')renderCurrent();
+      }};
+      requestAnimationFrame(step);
+    }catch(e){res()}
+  });
+}
+function deviceProfile(){
+  if(S.devOverride){const d=DEVICES.find(x=>x.id===S.devOverride);if(d)return {d,src:'manual'}}
+  if(S.devOverride==='generic')return {d:GENERIC,src:'manual'};
+  const m=DEV.model||'',b=DEV.manufacturer||'';
+  const d=DEVICES.find(x=>x.match(m,b));
+  return d?{d,src:'auto'}:{d:GENERIC,src:'auto'};
+}
+function compat(){
+  const {d,src}=deviceProfile();
+  if(d.full)return {txt:'Compatível: perfil completo',cls:'ok',d,src};
+  if(d.id!=='generic')return {txt:'Parcial: perfil genérico da marca',cls:'na',d,src};
+  return {txt:'Genérico: sem perfil específico',cls:'na',d,src};
+}
+const devName=()=>{const {d,src}=deviceProfile();return (src==='manual'||DEV.model)?(DEV.model&&src==='auto'?DEV.model:d.name):'Aparelho não identificado'};
+
+/* ===== Sugestão local de sensibilidade ===== */
+const PREF_MAP={capa:'CAPA',puxada:'PUXADA',precisao:'PRECISÃO',equilibrado:'EQUILIBRADO'};
+function suggest(){
+  const {d}=deviceProfile();
+  const base=PRESETS[PREF_MAP[S.pref]||'EQUILIBRADO'];
+  const why=[`Preferência: ${S.pref}.`];
+  const out={};
+  const hz=DEV.hz||d.hz||60;
+  const weak=(DEV.mem&&DEV.mem<=4)||(DEV.cores&&DEV.cores<=6);
+  for(const [k] of KEYS){
+    let v=base[k];
+    v+=d.bias[k]||0;
+    if(hz>=120&&(k==='geral'||k==='olh'))v+=4;
+    if(hz<=60&&k==='geral')v-=4;
+    if(weak&&(k==='geral'||k==='red'))v-=4;
+    v=Math.round(v*0.75+cur().vals[k]*0.25);
+    v+=Math.round((Math.random()-0.5)*12);
+    out[k]=clamp(v);
+  }
+  if(d.id!=='generic'&&(d.bias.geral||d.bias.x4))why.push(`Ajuste do aparelho: ${d.name}.`);
+  why.push(`Taxa de atualização considerada: ${hz} Hz${DEV.hz?' (medida)':d.hz?' (referência do modelo)':' (padrão assumido)'}.`);
+  if(weak)why.push('Capacidade do aparelho: valores levemente menores no geral e no ponto vermelho.');
+  else if(DEV.mem||DEV.cores)why.push('Capacidade do aparelho: sem ajuste necessário.');
+  else why.push('Capacidade do aparelho: informação indisponível, sem ajuste.');
+  if(DEV.android)why.push(`Android ${DEV.android}: informativo, sem efeito nos números.`);
+  why.push('25% do resultado vem dos valores atuais do perfil ativo.');
+  return {vals:out,why,pref:S.pref,at:Date.now()};
+}
+/* ===== Páginas ===== */
+const PAGES={};
+let pendingDel=null,editId=null;
+const bars=v=>`<div class="bars">${KEYS.map(([k,l])=>`<div class="bar"><span>${l}</span><i><u style="width:${v[k]/2}%"></u></i><span>${v[k]}</span></div>`).join('')}</div>`;
+const go=p=>{location.hash=p};
+
+PAGES.inicio=()=>{
+  const c=compat(),p=cur();
+  const n=(c.d.tips||[]).length+(S.lastAI?1:0);
+  return `<div class="card" style="text-align:center">
+    <h1 style="font-size:30px;letter-spacing:.1em">SENSI Z7KX BR</h1>
+    <div class="sig" style="margin:4px 0 10px">BY: MACIELZ7KX</div>
+    <div>${esc(devName())}</div>
+    <div class="${c.cls}" style="font-size:13px;margin-top:2px">${esc(c.txt)}</div>
+  </div>
+  ${memOnly?'<div class="note">O armazenamento local está bloqueado neste navegador. Suas configurações valem só até fechar a página.</div>':''}
+  <div class="card"><h3>Sensibilidade atual · Perfil ${esc(p.name)}</h3>${bars(p.vals)}
+    <div class="row" style="margin-top:12px"><button class="btn pri" data-go="sens">Ajustar</button><button class="btn" data-go="perfis">Trocar perfil</button></div></div>
+  <div class="grid">
+    <button class="tile" data-go="brevent">${ic('term')}<b>Brevent</b><span>Acesso rápido aos comandos</span></button>
+    <button class="tile" data-go="diag">${ic('diag')}<b>Diagnóstico</b><span>Dados do aparelho</span></button>
+    <button class="tile" data-go="ia">${ic('ia')}<b>Sensibilidade IA</b><span>${n} recomendações disponíveis</span></button>
+    <button class="tile" data-go="fps">${ic('fps')}<b>Painel FPS</b><span>Estabilidade e limites</span></button>
+    <button class="tile" data-go="aparelhos">${ic('dev')}<b>Por aparelho</b><span>Recomendações</span></button>
+    <button class="tile" data-go="backup">${ic('bak')}<b>Backup</b><span>Exportar e restaurar</span></button>
+  </div>
+  <p class="note">Este aplicativo organiza e sugere configurações. Ele não altera o Free Fire MAX diretamente: você aplica os valores dentro do jogo.</p>`;
+};
+
+PAGES.sens=()=>{
+  const p=cur();
+  return `<h2>Sensibilidade</h2><p class="sub">Perfil ativo: <b>${esc(p.name)}</b>. Escala de 0 a 200. As alterações salvam sozinhas.</p>
+  <div class="card">${KEYS.map(([k,l])=>`<div class="sl">
+    <label for="n-${k}">${l}</label>
+    <input type="number" id="n-${k}" data-k="${k}" min="0" max="200" step="1" inputmode="numeric" value="${p.vals[k]}">
+    <input type="range" id="r-${k}" data-k="${k}" min="0" max="200" step="1" value="${p.vals[k]}" aria-label="${l}">
+  </div>`).join('')}
+  <div class="row"><button class="btn pri" data-act="savecur">Salvar no perfil</button><button class="btn" data-act="restore">Restaurar padrões</button><button class="btn" data-act="saveas">Salvar como novo perfil</button></div>
+  <p class="note">Restaurar padrões volta o perfil ao valor original: os perfis iniciais recuperam seus números de fábrica e os demais voltam a 100.</p></div>`;
+};
+function wireSens(){
+  $$('#p-sens [data-k]').forEach(el=>el.addEventListener('input',()=>{
+    const k=el.dataset.k;let raw=el.value;
+    if(raw==='')return;
+    const v=clamp(raw);
+    cur().vals[k]=v;
+    $('#r-'+k).value=v;
+    if(el.type==='range')$('#n-'+k).value=v;
+    else if(Number(raw)!==v)el.value=v;
+    save();
+  }));
+  $$('#p-sens input[type=number]').forEach(el=>el.addEventListener('blur',()=>{if(el.value==='')el.value=cur().vals[el.dataset.k]}));
+}
+
+PAGES.ia=()=>{
+  const r=S.lastAI;
+  const prefs=[['capa','Capa'],['puxada','Puxada'],['precisao','Precisão'],['equilibrado','Equilibrado']];
+  return `<h2>Sensibilidade IA</h2><p class="sub">Sugestões calculadas no próprio aparelho, por regras que usam seus dados. Não é um serviço online.</p>
+  <div class="card"><h3>Sua preferência</h3>
+    <div class="tabs" id="prefs">${prefs.map(([k,l])=>`<button data-pref="${k}" class="${S.pref===k?'on':''}">${l}</button>`).join('')}</div>
+    <div class="kv"><span>Aparelho</span><span>${esc(devName())}</span></div>
+    <div class="kv"><span>Android</span><span class="${DEV.android?'':'na'}">${DEV.android?esc(DEV.android):'indisponível'}</span></div>
+    <div class="kv"><span>Taxa de atualização</span><span class="${DEV.hz?'':'na'}">${DEV.hz?DEV.hz+' Hz (medida)':'indisponível'}</span></div>
+    <div class="kv"><span>Capacidade</span><span class="${DEV.mem||DEV.cores?'':'na'}">${DEV.mem||DEV.cores?`${DEV.mem?DEV.mem+' GB RAM (aprox.) · ':''}${DEV.cores?DEV.cores+' núcleos':''}`:'indisponível'}</span></div>
+    <button class="btn pri" data-act="gen" style="margin-top:10px;width:100%">GERAR NOVA SENSIBILIDADE</button></div>
+  ${r?`<div class="card"><h3>Sugestão gerada</h3>${bars(r.vals)}
+    <div class="row" style="margin-top:12px"><button class="btn pri" data-act="aiapply">Aplicar ao perfil ativo</button><button class="btn" data-act="aisave">Salvar como novo perfil</button></div>
+    <h3 style="margin-top:14px">Como foi calculada</h3><ul style="margin:0;padding-left:18px;color:var(--mut);font-size:13px">${r.why.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`:'<div class="card"><p class="sub" style="margin:0">Toque em GERAR NOVA SENSIBILIDADE para ver uma sugestão.</p></div>'}
+  <p class="note">São sugestões de ponto de partida. Não há garantia de resultado: ajuste no treino do jogo até ficar confortável.</p>`;
+};
+
+/* ===== Z7KX AI Scanner: análise local inicial de gravações ===== */
+let scannerState={url:null,fileName:'',report:null};
+PAGES.scanner=()=>`<h2>Z7KX AI SCANNER</h2><p class="sub">Análise inicial de gravações do Free Fire MAX.</p>
+  <div class="card"><h3>1. Importar gravação</h3>
+    <label class="sub" for="z7-video">Escolha um vídeo do aparelho (MP4 ou WebM)</label>
+    <input class="txt" id="z7-video" type="file" accept="video/mp4,video/webm,video/quicktime">
+    <video id="z7-preview" controls playsinline style="display:none;width:100%;max-height:260px;margin-top:10px;border-radius:10px;background:#000"></video>
+    <p id="z7-fileinfo" class="note">O vídeo é processado localmente nesta primeira versão; não é enviado para servidor.</p>
+    <button class="btn pri" id="z7-analyze" disabled style="width:100%">ANALISAR GRAVAÇÃO</button>
+  </div>
+  <div id="z7-report">${scannerState.report?scannerState.report:'<div class="card"><p class="sub" style="margin:0">Importe uma gravação para iniciar a análise técnica.</p></div>'}</div>
+  <canvas id="z7-canvas" width="160" height="90" style="display:none"></canvas>
+  <div class="card"><h3>O que esta versão consegue avaliar</h3>
+    <ul style="padding-left:18px;margin:6px 0;font-size:13px;display:grid;gap:6px">
+      <li>Resolução, duração e proporção do vídeo.</li><li>Variação visual aproximada entre quadros e luminosidade.</li>
+      <li>Checklist guiado para você conferir HUD, posicionamento dos botões e conforto da puxada.</li>
+    </ul>
+    <p class="note">Ainda não reconhece automaticamente inimigos, tiros, mira ou valores ideais de sensibilidade. A análise de HUD e jogabilidade por IA será uma etapa posterior.</p>
+  </div>`;
+
+function scannerReset(){
+  if(scannerState.url)URL.revokeObjectURL(scannerState.url);
+  scannerState={url:null,fileName:'',report:null};
+}
+function scannerWire(){
+  const input=document.getElementById('z7-video'),video=document.getElementById('z7-preview'),btn=document.getElementById('z7-analyze');
+  if(!input||!video||!btn)return;
+  input.addEventListener('change',()=>{
+    const file=input.files&&input.files[0];if(!file)return;
+    if(!file.type.startsWith('video/')){toast('Escolha um arquivo de vídeo.');return}
+    if(file.size>500*1024*1024){toast('Vídeo acima de 500 MB. Escolha uma gravação menor.');return}
+    if(scannerState.url)URL.revokeObjectURL(scannerState.url);
+    scannerState.url=URL.createObjectURL(file);scannerState.fileName=file.name;scannerState.report=null;
+    video.src=scannerState.url;video.style.display='block';
+    document.getElementById('z7-fileinfo').textContent=`${file.name} · ${(file.size/1024/1024).toFixed(1)} MB · carregamento local`;
+    btn.disabled=false;document.getElementById('z7-report').innerHTML='';
+  });
+  btn.addEventListener('click',()=>scannerAnalyze(video,btn));
+}
+async function scannerAnalyze(video,btn){
+  if(!video.src){toast('Importe um vídeo primeiro.');return}
+  btn.disabled=true;btn.textContent='ANALISANDO…';
+  const canvas=document.getElementById('z7-canvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});
+  try{
+    await new Promise((resolve,reject)=>{if(video.readyState>=1)return resolve();video.addEventListener('loadedmetadata',resolve,{once:true});video.addEventListener('error',reject,{once:true})});
+    const duration=video.duration||0,w=video.videoWidth,h=video.videoHeight;
+    if(!w||!h||!duration)throw new Error('Não foi possível ler os dados do vídeo.');
+    const count=Math.min(10,Math.max(3,Math.floor(duration/3))),samples=[],step=duration/(count+1);
+    for(let i=1;i<=count;i++){
+      const t=Math.min(duration-0.05,step*i);
+      await new Promise((resolve,reject)=>{const done=()=>resolve();const fail=()=>reject(new Error('Falha ao ler um quadro.'));video.addEventListener('seeked',done,{once:true});video.addEventListener('error',fail,{once:true});video.currentTime=t});
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;let sum=0;
+      for(let j=0;j<data.length;j+=16)sum+=(0.2126*data[j]+0.7152*data[j+1]+0.0722*data[j+2]);
+      samples.push(sum/(data.length/16)/255);
+    }
+    const mean=samples.reduce((a,b)=>a+b,0)/samples.length;
+    const variance=samples.reduce((a,b)=>a+(b-mean)**2,0)/samples.length;
+    const ratio=w/h,orientation=ratio>1.15?'Paisagem':ratio<0.87?'Retrato':'Próximo de quadrado';
+    const light=mean<0.22?'escura':mean>0.82?'muito clara':'equilibrada';
+    const stability=variance<0.004?'baixa variação de luminosidade':variance<0.018?'variação moderada de luminosidade':'alta variação de luminosidade';
+    const mins=Math.floor(duration/60),secs=Math.floor(duration%60);
+    const html=`<div class="card"><h3>Relatório técnico</h3>
+      <div class="kv"><span>Arquivo</span><span>${esc(scannerState.fileName)}</span></div>
+      <div class="kv"><span>Resolução</span><span>${w} × ${h} px</span></div>
+      <div class="kv"><span>Formato</span><span>${orientation} · ${ratio.toFixed(2)}:1</span></div>
+      <div class="kv"><span>Duração</span><span>${mins} min ${String(secs).padStart(2,'0')} s</span></div>
+      <div class="kv"><span>Luminosidade média</span><span>${light}</span></div>
+      <div class="kv"><span>Variação entre amostras</span><span>${stability}</span></div>
+      <p class="note">A variação mede apenas luminosidade em quadros amostrados; não representa FPS, precisão da mira ou qualidade da jogada.</p></div>
+      <div class="card"><h3>Checklist de HUD e controle</h3>
+        <p class="sub">Confira no vídeo e marque o que percebeu:</p>
+        ${[['hud','Os botões ficam visíveis sem cobrir a área de visão?'],['fire','O botão de tiro está numa posição confortável?'],['drag','A puxada consegue começar sem bater na borda da tela?'],['scope','As miras abrem sem atrapalhar o movimento?'],['stable','A gravação parece fluida, sem travamentos perceptíveis?']].map(([id,label])=>`<label style="display:flex;gap:9px;align-items:flex-start;margin:10px 0;font-size:14px"><input type="checkbox" data-z7-check="${id}" style="accent-color:var(--acc);margin-top:3px">${label}</label>`).join('')}
+        <button class="btn pri" id="z7-save-check" style="width:100%">SALVAR MINHA AVALIAÇÃO</button>
+        <div id="z7-check-result" class="note">Sua avaliação fica nesta tela; ainda não altera a sensibilidade automaticamente.</div>
+      </div>`;
+    scannerState.report=html;document.getElementById('z7-report').innerHTML=html;
+    document.getElementById('z7-save-check').addEventListener('click',()=>{
+      const checks=[...document.querySelectorAll('[data-z7-check]')];const yes=checks.filter(x=>x.checked).length;
+      document.getElementById('z7-check-result').textContent=`Avaliação salva nesta sessão: ${yes} de ${checks.length} itens marcados. Use isso como checklist, não como diagnóstico automático.`;
+    });
+    toast('Análise técnica concluída.');
+  }catch(err){toast(err.message||'Não foi possível analisar esse vídeo.');}
+  finally{btn.disabled=false;btn.textContent='ANALISAR NOVAMENTE'}
+}
+
+PAGES.perfis=()=>{
+  const ed=editId&&S.profiles[editId];
+  return `<h2>Perfis</h2><p class="sub">Cada perfil guarda seus próprios valores.</p>
+  ${S.order.map(id=>{const p=S.profiles[id];return `<div class="prof ${id===S.active?'sel':''}">
+    <div style="min-width:0"><b>${esc(p.name)}</b><small>${id===S.active?'Ativo · ':''}Geral ${p.vals.geral} · Vermelho ${p.vals.red} · AWM ${p.vals.awm}</small></div>
+    <div class="row" style="justify-content:flex-end">
+      ${id!==S.active?`<button class="btn" data-pf="sel" data-id="${id}">Usar</button>`:''}
+      <button class="btn" data-pf="edit" data-id="${id}">Editar</button>
+      <button class="btn" data-pf="dup" data-id="${id}">Duplicar</button>
+      ${pendingDel===id?`<button class="btn bad" data-pf="delok" data-id="${id}">Confirmar</button><button class="btn" data-pf="delno">Cancelar</button>`:`<button class="btn bad" data-pf="del" data-id="${id}">Excluir</button>`}
+    </div></div>`}).join('')}
+  ${ed?`<div class="card"><h3>Editar perfil</h3>
+    <label for="ed-name" class="sub">Nome (até 24 caracteres)</label>
+    <input class="txt" id="ed-name" maxlength="24" value="${esc(ed.name)}">
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-pf="rename">Salvar nome</button><button class="btn" data-pf="editvals">Editar valores</button><button class="btn" data-pf="editno">Fechar</button></div></div>`:''}
+  <div class="card"><h3>Criar perfil</h3>
+    <label for="new-name" class="sub">Nome do novo perfil</label>
+    <input class="txt" id="new-name" maxlength="24" placeholder="Ex.: Ranqueada">
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-pf="create">Criar com valores do perfil ativo</button></div></div>`;
+};
+
+function addProfile(name,vals){
+  name=String(name||'').trim().slice(0,24);
+  if(!name){toast('Digite um nome para o perfil.');return null}
+  if(S.order.length>=50){toast('Limite de 50 perfis atingido.');return null}
+  let n=name,i=2;const names=S.order.map(id=>S.profiles[id].name.toLowerCase());
+  while(names.includes(n.toLowerCase()))n=`${name} ${i++}`;
+  const id=uid();
+  const v={};for(const [k] of KEYS)v[k]=clamp(vals[k]);
+  S.profiles[id]={name:n,vals:v,builtin:false};S.order.push(id);
+  return id;
+}
+function profileAction(a,id){
+  if(a==='sel'){S.active=id;toast('Perfil ativo: '+S.profiles[id].name)}
+  else if(a==='edit'){editId=id}
+  else if(a==='editno'){editId=null}
+  else if(a==='editvals'){S.active=id;editId=null;save();go('sens');return}
+  else if(a==='rename'){
+    const v=$('#ed-name').value.trim().slice(0,24);
+    if(!v){toast('O nome não pode ficar vazio.');return}
+    S.profiles[editId].name=v;toast('Nome salvo.')
+  }
+  else if(a==='dup'){const nid=addProfile(S.profiles[id].name+' cópia',S.profiles[id].vals);if(nid)toast('Perfil duplicado.')}
+  else if(a==='del'){pendingDel=id}
+  else if(a==='delno'){pendingDel=null}
+  else if(a==='delok'){
+    if(S.order.length<=1){toast('É preciso manter ao menos um perfil.');pendingDel=null}
+    else{delete S.profiles[id];S.order=S.order.filter(x=>x!==id);if(S.active===id)S.active=S.order[0];if(editId===id)editId=null;pendingDel=null;toast('Perfil excluído.')}
+  }
+  else if(a==='create'){
+    const nid=addProfile($('#new-name').value,cur().vals);
+    if(nid){S.active=nid;toast('Perfil criado e ativado.')}
+  }
+  save();renderCurrent();
+}
+
+/* ===== Navegação ===== */
+const NAV=[['inicio','Início','home'],['sens','Sens','sens'],['perfis','Perfis','prof'],['brevent','Brevent','term'],['mais','Mais','more']];
+let curPage='inicio';
+function renderNav(){
+  $('#nav').innerHTML=NAV.map(([id,l,i])=>`<button data-go="${id}" class="${(curPage===id||(id==='mais'&&!NAV.some(n=>n[0]===curPage)))?'on':''}" aria-label="${l}">${ic(i)}${l}</button>`).join('');
+}
+function renderCurrent(){
+  const el=$('#p-'+curPage);if(!el||!PAGES[curPage])return;
+  const keepY=window.scrollY;
+  try{el.innerHTML=PAGES[curPage]();(AFTER[curPage]||(()=>{}))()}catch(e){el.innerHTML='<div class="card"><h3>Erro ao abrir a página</h3><p class="sub">Volte ao início e tente de novo.</p></div>'}
+  window.scrollTo(0,keepY);
+  $('#verchip').textContent=memOnly?'SEM SALVAR':'V2.1 SCANNER';
+}
+const AFTER={sens:()=>wireSens(),scanner:()=>scannerWire()};
+function route(){
+  let h=(location.hash||'#inicio').slice(1);
+  if(!PAGES[h])h='inicio';
+  curPage=h;
+  $$('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+h));
+  renderNav();renderCurrent();window.scrollTo(0,0);
+}
+let brevCat=0;
+PAGES.brevent=()=>{
+  const cat=BREV[brevCat];
+  return `<h2>Brevent</h2><p class="sub">Biblioteca de comandos para colar no shell do Brevent. Sem ADB, sem root.</p>
+  <div class="note">Copiar não executa nada. Cada comando só tem efeito depois que você colar e executar no Brevent. Leia a explicação e use a reversão se algo não ficar bom.</div>
+  <div class="tabs">${BREV.map((c,i)=>`<button data-cat="${i}" class="${i===brevCat?'on':''}">${esc(c.cat)}</button>`).join('')}</div>
+  ${cat.items.map((it,j)=>`<div class="card cmd"><h4>${esc(it.n)}</h4><div class="meta">${esc(it.d)}</div>
+    <div class="code">${esc(it.c)}</div>
+    <div class="meta"><b>Como funciona:</b> ${esc(it.e)}</div>
+    <div class="meta"><b>Compatibilidade:</b> ${esc(it.k)}</div>
+    <div class="meta"><b>Como aplicar:</b> ${esc(it.a)}</div>
+    ${it.r?`<div class="meta"><b>Reversão:</b></div><div class="code">${esc(it.r)}</div>`:'<div class="meta"><b>Reversão:</b> não há alteração a reverter.</div>'}
+    <div class="row"><button class="btn pri" data-copy="${brevCat}-${j}-c">COPIAR</button>${it.r?`<button class="btn" data-copy="${brevCat}-${j}-r">Copiar reversão</button>`:''}</div></div>`).join('')}`;
+};
+
+PAGES.fps=()=>{
+  const hz=DEV.hz;
+  const sec=(t,items)=>`<div class="card"><h3>${t}</h3><ul style="margin:0;padding-left:18px;font-size:14px;display:grid;gap:6px">${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+  return `<h2>Painel FPS</h2><p class="sub">Orientações para um desempenho mais estável.</p>
+  <div class="card"><h3>Taxa de atualização da tela</h3>
+    <div class="big">${hz?hz+' Hz':'indisponível'}</div>
+    <p class="sub" style="margin:4px 0 0">${hz?'Medida agora pelo navegador. Se estiver em modo de economia de bateria, pode aparecer menor que a real.':'Não foi possível medir neste navegador.'}</p>
+    <button class="btn" data-act="remeasure" style="margin-top:10px">Medir novamente</button></div>
+  ${sec('Limites de FPS',['A taxa de atualização é da tela (Hz). O FPS é o que o jogo desenha por segundo. O FPS nunca passa do que o jogo permite.','As opções de quadros por segundo no menu Gráficos do jogo dependem do aparelho e da versão instalada. Se uma opção não aparece, ela não é suportada.','Nenhuma configuração deste aplicativo desbloqueia FPS que o jogo ou o aparelho não oferecem.','Uma tela de 120 Hz não faz o jogo rodar a 120 FPS por si só.'])}
+  ${sec('Recomendações para estabilidade',['Prefira FPS estável a FPS alto: um valor que o aparelho sustenta passa mais fluidez que picos seguidos de quedas.','Mantenha pelo menos 10% do armazenamento livre.','Atualize o jogo e o sistema quando houver atualizações.','Jogue com o aparelho frio: calor faz o chip reduzir a velocidade.','Evite jogar com a bateria muito baixa ou em modo de economia de energia.'])}
+  ${sec('Configurações gráficas',['Teste a qualidade Suave ou Padrão se houver quedas. Suba um nível por vez e observe.','Desligue sombras e efeitos extras se o aparelho esquentar.','Se houver opção de FPS, escolha a que o aparelho sustenta no meio da partida, não só no lobby.'])}
+  ${sec('Reduzir quedas de FPS',['Feche apps recentes antes de abrir o jogo.','Desative o Wi-Fi do aparelho ou da casa em uso pesado por outros dispositivos, se o ping estiver oscilando. Queda de ping não é queda de FPS, mas confunde.','Veja no Brevent a redução de resolução e a densidade, com reversão pronta.','Reinicie o aparelho de tempos em tempos.'])}
+  <p class="note">Os resultados variam conforme aparelho, temperatura e versão do jogo. Nada aqui é garantia de ganho de FPS.</p>`;
+};
+
+PAGES.diag=()=>{
+  const v=(x,sfx='')=>x||x===0?`<span>${esc(x)}${sfx}</span>`:'<span class="na">indisponível</span>';
+  const c=compat();
+  return `<h2>Diagnóstico</h2><p class="sub">Dados que o navegador consegue ler. O que não puder ser lido aparece como indisponível.</p>
+  <div class="card">
+    <div class="kv"><span>Fabricante</span>${v(DEV.manufacturer)}</div>
+    <div class="kv"><span>Modelo</span>${v(DEV.model)}</div>
+    <div class="kv"><span>Versão Android</span>${v(DEV.android?'Android '+DEV.android:null)}</div>
+    <div class="kv"><span>Resolução (estimada)</span>${DEV.w?`<span>${DEV.w} x ${DEV.h} px</span>`:'<span class="na">indisponível</span>'}</div>
+    <div class="kv"><span>Densidade DPI (estimada)</span>${DEV.dpi?`<span>~${DEV.dpi} dpi (fator ${DEV.dpr.toFixed(2)})</span>`:'<span class="na">indisponível</span>'}</div>
+    <div class="kv"><span>Taxa de atualização</span>${DEV.hz?`<span>${DEV.hz} Hz (medida)</span>`:'<span class="na">indisponível</span>'}</div>
+    <div class="kv"><span>Memória RAM</span>${DEV.mem?`<span>~${DEV.mem} GB (o navegador arredonda e limita a 8 GB)</span>`:'<span class="na">indisponível</span>'}</div>
+    <div class="kv"><span>Núcleos de CPU</span>${v(DEV.cores)}</div>
+    <div class="kv"><span>Compatibilidade</span><span class="${c.cls}">${esc(c.txt)}</span></div>
+  </div>
+  ${DEV.androidNote?`<div class="note">${esc(DEV.androidNote)}</div>`:''}
+  <div class="note">Um navegador não acessa tudo do aparelho. Se o modelo não foi identificado, escolha-o manualmente em Por aparelho. Para valores exatos, veja Configurações do Android > Sobre o telefone.</div>
+  <button class="btn" data-act="rediag">Atualizar diagnóstico</button>`;
+};
+
+PAGES.aparelhos=()=>{
+  const {d,src}=deviceProfile();
+  return `<h2>Por aparelho</h2><p class="sub">Recomendações conforme o modelo.</p>
+  <div class="card"><h3>Seu aparelho</h3>
+    <label for="dev-sel" class="sub">Perfil em uso ${src==='auto'?'(detectado)':'(escolhido por você)'}</label>
+    <select id="dev-sel"><option value="">Automático</option>${DEVICES.map(x=>`<option value="${x.id}" ${S.devOverride===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}<option value="generic" ${S.devOverride==='generic'?'selected':''}>Genérico</option></select></div>
+  <div class="card"><h3>${esc(d.name)}</h3>
+    ${Object.entries(d.spec||{}).map(([k,val])=>`<div class="kv"><span>${esc(k)}</span><span>${esc(val)}</span></div>`).join('')}
+    <ul style="padding-left:18px;font-size:14px;display:grid;gap:6px;margin:8px 0 0">${d.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+    ${d.full?'<div class="note">Fonte das especificações: dados públicos do fabricante. Confirme os números do seu aparelho no Diagnóstico.</div>':''}</div>
+  <div class="card"><h3>Perfis disponíveis</h3>
+    ${DEVICES.map(x=>`<div class="kv"><span>${esc(x.name)}</span><span class="${x.full?'ok':'na'}">${x.full?'Completo':'Genérico da marca'}</span></div>`).join('')}</div>`;
+};
+
+function snapData(){return {profiles:JSON.parse(JSON.stringify(S.profiles)),order:[...S.order],active:S.active,theme:S.theme,pref:S.pref}}
+function addSnapshot(label){
+  S.backups.unshift({id:uid(),ts:Date.now(),label,data:snapData()});
+  S.backups=S.backups.slice(0,10);save();
+}
+function exportText(){
+  return JSON.stringify({app:'SENSI Z7KX BR',version:2,exportedAt:new Date().toISOString(),profiles:S.order.map(id=>({name:S.profiles[id].name,vals:S.profiles[id].vals}))},null,2);
+}
+function parseImport(text){
+  if(!text||!text.trim())return {err:'Cole o conteúdo do arquivo JSON.'};
+  if(text.length>300000)return {err:'Arquivo grande demais.'};
+  let d;try{d=JSON.parse(text)}catch(e){return {err:'O texto não é um JSON válido.'}}
+  if(!d||typeof d!=='object'||d.app!=='SENSI Z7KX BR')return {err:'Este arquivo não é um backup do SENSI Z7KX BR.'};
+  if(d.version!==2)return {err:'Versão de arquivo não suportada.'};
+  if(!Array.isArray(d.profiles)||!d.profiles.length||d.profiles.length>50)return {err:'Lista de perfis ausente ou com mais de 50 itens.'};
+  const out=[];
+  for(const [i,p] of d.profiles.entries()){
+    if(!p||typeof p.name!=='string'||!p.name.trim()||p.name.length>24)return {err:`Perfil ${i+1}: nome inválido.`};
+    if(!p.vals||typeof p.vals!=='object')return {err:`Perfil ${i+1}: valores ausentes.`};
+    const v={};
+    for(const [k,l] of KEYS){const n=p.vals[k];if(typeof n!=='number'||!Number.isFinite(n)||n<0||n>200)return {err:`Perfil "${p.name}": ${l} deve estar entre 0 e 200.`};v[k]=Math.round(n)}
+    out.push({name:p.name.trim(),vals:v});
+  }
+  return {profiles:out};
+}
+function restoreSnapshot(sn){
+  try{
+    const dd=sn.data;if(!dd||!Array.isArray(dd.order)||!dd.profiles)throw 0;
+    const profiles={},order=[];
+    for(const id of dd.order){const p=dd.profiles[id];if(!p||typeof p.name!=='string')continue;
+      const v={};for(const [k] of KEYS)v[k]=clamp(p.vals&&p.vals[k]);
+      profiles[id]={name:p.name.slice(0,24),vals:v,builtin:!!p.builtin};order.push(id)}
+    if(!order.length)throw 0;
+    S.profiles=profiles;S.order=order;S.active=profiles[dd.active]?dd.active:order[0];
+    if(THEMES.some(t=>t[0]===dd.theme))S.theme=dd.theme;
+    save();applyTheme();return true;
+  }catch(e){return false}
+}
+const fmt=ts=>new Date(ts).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+PAGES.backup=()=>`<h2>Backup</h2><p class="sub">Exportar, importar e proteger seus perfis.</p>
+  <div class="card"><h3>Cópias de segurança</h3>
+    <button class="btn pri" data-act="snap">Criar cópia de segurança agora</button>
+    <div style="margin-top:10px">${S.backups.length?S.backups.map(b=>`<div class="prof"><div style="min-width:0"><b>${esc(b.label)}</b><small>${fmt(b.ts)} · ${b.data.order.length} perfis</small></div><div class="row"><button class="btn" data-bk="restore" data-id="${b.id}">Restaurar</button><button class="btn bad" data-bk="del" data-id="${b.id}">Excluir</button></div></div>`).join(''):'<p class="sub" style="margin:0">Nenhuma cópia ainda.</p>'}</div>
+    <p class="note">Guarda até 10 cópias neste aparelho. Antes de importar ou restaurar, o app cria uma cópia automática.</p></div>
+  <div class="card"><h3>Exportar perfis (JSON)</h3>
+    <textarea id="exp" readonly>${esc(exportText())}</textarea>
+    <div class="row" style="margin-top:8px"><button class="btn pri" data-act="expcopy">Copiar JSON</button></div>
+    <p class="note">Cole o texto copiado em um arquivo .json ou numa mensagem para guardar fora do aparelho.</p></div>
+  <div class="card"><h3>Importar perfis</h3>
+    <label for="imp-file" class="sub">Escolha um arquivo .json ou cole o conteúdo abaixo</label>
+    <input type="file" id="imp-file" accept=".json,application/json" class="txt" style="padding:6px">
+    <textarea id="imp" placeholder='{"app":"SENSI Z7KX BR", ...}' style="margin-top:8px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn pri" data-act="imp">Validar e importar</button></div>
+    <p class="note">O arquivo é validado antes. Os perfis importados são adicionados aos seus, sem apagar nada.</p></div>`;
+const AFTERB=()=>{
+  const f=$('#imp-file');if(!f)return;
+  f.addEventListener('change',()=>{const file=f.files[0];if(!file)return;
+    if(file.size>300000){toast('Arquivo grande demais.');return}
+    const r=new FileReader();r.onload=()=>{$('#imp').value=String(r.result);toast('Arquivo lido. Toque em Validar e importar.')};
+    r.onerror=()=>toast('Não foi possível ler o arquivo.');r.readAsText(file)});
+};
+AFTER.backup=AFTERB;
+AFTER.aparelhos=()=>{$('#dev-sel').addEventListener('change',e=>{S.devOverride=e.target.value;save();renderCurrent()})};
+
+function applyTheme(){document.documentElement.dataset.th=S.theme}
+PAGES.temas=()=>`<h2>Temas</h2><p class="sub">A troca vale na hora.</p>
+  <div class="sw">${THEMES.map(([id,l,bg])=>`<button data-theme="${id}" class="${S.theme===id?'on':''}" style="background:${bg}">${l}</button>`).join('')}</div>
+  <div class="card" style="margin-top:12px;text-align:center"><div class="sig">BY: MACIELZ7KX</div></div>`;
+
+PAGES.mais=()=>`<h2>Mais</h2><p class="sub">Todas as áreas do app.</p><div class="grid">
+  <button class="tile" data-go="ia">${ic('ia')}<b>Sensibilidade IA</b><span>Sugestões 0 a 200</span></button>
+  <button class="tile" data-go="scanner">${ic('fps')}<b>Z7KX AI Scanner</b><span>Analisar gravação de partida</span></button>
+  <button class="tile" data-go="fps">${ic('fps')}<b>Painel FPS</b><span>Estabilidade</span></button>
+  <button class="tile" data-go="diag">${ic('diag')}<b>Diagnóstico</b><span>Dados do aparelho</span></button>
+  <button class="tile" data-go="aparelhos">${ic('dev')}<b>Por aparelho</b><span>Recomendações</span></button>
+  <button class="tile" data-go="backup">${ic('bak')}<b>Backup</b><span>Exportar e importar</span></button>
+  <button class="tile" data-go="temas">${ic('tema')}<b>Temas</b><span>Cores do app</span></button></div>`;
+
+/* ===== Eventos ===== */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-go],[data-act],[data-pf],[data-copy],[data-cat],[data-pref],[data-theme],[data-bk]');
+  if(!t)return;
+  try{
+    if(t.dataset.go)return go(t.dataset.go);
+    if(t.dataset.pf)return profileAction(t.dataset.pf,t.dataset.id);
+    if(t.dataset.cat!==undefined){brevCat=+t.dataset.cat;return renderCurrent()}
+    if(t.dataset.pref){S.pref=t.dataset.pref;save();return renderCurrent()}
+    if(t.dataset.theme){S.theme=t.dataset.theme;applyTheme();save();return renderCurrent()}
+    if(t.dataset.copy){
+      const [ci,ii,w]=t.dataset.copy.split('-');const it=BREV[ci].items[ii];
+      return copy(w==='r'?it.r:it.c,w==='r'?'Reversão copiada. Ainda não foi executada.':'Comando copiado. Ele ainda não foi executado: cole e execute no Brevent.')
+    }
+    if(t.dataset.bk){
+      const b=S.backups.find(x=>x.id===t.dataset.id);if(!b)return;
+      if(t.dataset.bk==='del'){S.backups=S.backups.filter(x=>x!==b);save();return renderCurrent()}
+      addSnapshot('Automática antes de restaurar');
+      return (restoreSnapshot(b)?toast('Cópia restaurada.'):toast('Cópia inválida, nada foi alterado.'),renderCurrent());
+    }
+    const a=t.dataset.act;
+    if(a==='savecur'){save();toast('Perfil "'+cur().name+'" salvo.')}
+    else if(a==='restore'){const id=S.active;const base=cur().builtin&&PRESETS[id.slice(2)]?PRESETS[id.slice(2)]:DEF;cur().vals={...base};save();renderCurrent();toast('Padrões restaurados.')}
+    else if(a==='saveas'){const id=addProfile('Novo perfil',cur().vals);if(id){S.active=id;editId=id;save();go('perfis');toast('Perfil criado. Dê um nome a ele.')}}
+    else if(a==='gen'){S.lastAI=suggest();save();renderCurrent()}
+    else if(a==='aiapply'&&S.lastAI){cur().vals={...S.lastAI.vals};save();toast('Aplicado ao perfil "'+cur().name+'".')}
+    else if(a==='aisave'&&S.lastAI){const id=addProfile('IA '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),S.lastAI.vals);if(id){S.active=id;save();toast('Perfil criado e ativado.')}}
+    else if(a==='remeasure'||a==='rediag'){toast('Medindo...');detectDevice().then(()=>renderCurrent())}
+    else if(a==='snap'){addSnapshot('Manual');renderCurrent();toast('Cópia criada.')}
+    else if(a==='expcopy'){copy($('#exp').value,'JSON copiado.')}
+    else if(a==='imp'){
+      const r=parseImport($('#imp').value);
+      if(r.err)return toast(r.err);
+      addSnapshot('Automática antes de importar');
+      let n=0;for(const p of r.profiles){if(addProfile(p.name,p.vals))n++}
+      save();renderCurrent();toast(n+' perfil(is) importado(s).');
+    }
+  }catch(err){toast('Algo deu errado, nada foi perdido.')}
+});
+window.addEventListener('hashchange',route);
+window.addEventListener('pagehide',()=>{if(scannerState.url)URL.revokeObjectURL(scannerState.url)});
+
+/* ===== Início ===== */
+load();applyTheme();
+route();
+detectDevice().then(()=>renderCurrent());
+</script>
+</body>
+</html>
